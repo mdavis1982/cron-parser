@@ -3,6 +3,7 @@
 namespace App\Parser;
 
 use App\Parser\Cron\StarParser;
+use App\Parser\Cron\CommaParser;
 use App\Parser\Cron\RangeParser;
 use App\Parser\Cron\IncrementParser;
 
@@ -38,6 +39,7 @@ class ExpressionParser
         $starParser = new StarParser($pattern, $lower, $upper);
         $rangeParser = new RangeParser($pattern, $lower, $upper);
         $incrementParser = new IncrementParser($pattern, $lower, $upper);
+        $commaParser = new CommaParser($pattern, $lower, $upper);
 
         if ($starParser->isMatch()) {
             return $starParser->summary();
@@ -49,6 +51,10 @@ class ExpressionParser
 
         if ($incrementParser->isMatch()) {
             return $incrementParser->summary();
+        }
+
+        if ($commaParser->isMatch()) {
+            return $commaParser->summary();
         }
 
         return 'Invalid expression';
