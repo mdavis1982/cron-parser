@@ -33,7 +33,6 @@ class ParseCronCommand extends Command
 
     private function getExpression(): Expression
     {
-        // We try to get the passed expression.
         // If an expression wasn't passed on the CLI, then we are going to ask for one.
         $expression = $this->argument('expression') ?? $this->ask('What is the cron expression you want to parse?');
 

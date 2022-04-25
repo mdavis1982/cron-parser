@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Parser\ExpressionParser;
 use Illuminate\Support\Collection;
 
 class Expression
@@ -38,27 +39,27 @@ class Expression
 
     public function minute(): string
     {
-        return 'TODO: Minute';
+        return ExpressionParser::parseMinute((string) $this->components[0]);
     }
 
     public function hour(): string
     {
-        return 'TODO: Hour';
+        return ExpressionParser::parseHour((string) $this->components[1]);
     }
 
     public function dayOfMonth(): string
     {
-        return 'TODO: Day of Month';
+        return ExpressionParser::parseDayOfMonth((string) $this->components[2]);
     }
 
     public function month(): string
     {
-        return 'TODO: Month';
+        return ExpressionParser::parseMonth((string) $this->components[3]);
     }
 
     public function dayOfWeek(): string
     {
-        return 'TODO: Day of Week';
+        return ExpressionParser::parseDayOfWeek((string) $this->components[4]);
     }
 
     public function command(): string
