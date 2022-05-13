@@ -18,7 +18,7 @@ class IncrementParser implements CronParser
 
     public function isMatch(): bool
     {
-        return preg_match('/^\*|[0-9]+\-[0-9]+$/', $this->pattern);
+        return preg_match('/^\*|[0-9]+\/[0-9]+$/', $this->pattern);
     }
 
     public function summary(): string
@@ -38,7 +38,7 @@ class IncrementParser implements CronParser
         }
 
         $summary = '';
-        for ($counter = $start; $counter < $this->range->last(); ++$counter) {
+        for ($counter = $start; $counter <= $this->range->last(); ++$counter) {
             if (0 === $counter % $increment) {
                 $summary .= ' ' . $counter;
             }

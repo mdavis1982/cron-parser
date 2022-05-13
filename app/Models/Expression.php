@@ -19,8 +19,10 @@ class Expression
     {
         $components = collect(explode(' ', $expression));
 
-        $combined = $components->slice(0, 5)
-            ->push($components->slice(5)->join(' '))
+        $length = $components->count() - 1;
+
+        $combined = $components->slice(0, $length)
+            ->push($components->slice($length)->join(' '))
             ->filter(fn ($component) => '' !== $component)
         ;
 
@@ -29,12 +31,17 @@ class Expression
 
     public function isValid(): bool
     {
-        return 6 === $this->components->count();
+        return 6 === $this->components->count() || 7 === $this->components->count();
     }
 
     public function isNotValid(): bool
     {
         return ! $this->isValid();
+    }
+
+    public function hasYear(): bool
+    {
+        return 7 === $this->components->count();
     }
 
     public function minute(): string
@@ -60,6 +67,15 @@ class Expression
     public function dayOfWeek(): string
     {
         return ExpressionParser::parseDayOfWeek((string) $this->components[4]);
+    }
+
+    public function year(): string
+    {
+        if (! $this->hasYear()) {
+            return 'No year in cron expression';
+        }
+
+        return ExpressionParser::parseYear((string) $this->components[5]);
     }
 
     public function command(): string

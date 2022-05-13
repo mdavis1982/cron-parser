@@ -18,10 +18,10 @@ class CommaParser implements CronParser
 
     public function isMatch(): bool
     {
-        return preg_match('/^[0-9]+(,[0-9]+)*$/', $this->pattern);
+        return preg_match('/[0-9]+(,[0-9]+)*([0-9]+\-[0-9]+)*/', $this->pattern);
     }
 
-    public function summary(): string
+    public function summary($dump = false): string
     {
         if (! $this->isMatch()) {
             return 'Not a comma match';
@@ -31,6 +31,12 @@ class CommaParser implements CronParser
 
         $summary = '';
         foreach ($parts as $part) {
+            if (mb_strpos($part, '-')) {
+                [$lower, $upper] = explode('-', $part);
+
+                $part = (new RangeParser($part, $lower, $upper))->summary();
+            }
+
             $summary .= ' ' . $part;
         }
 

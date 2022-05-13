@@ -6,6 +6,7 @@ use App\Parser\Cron\StarParser;
 use App\Parser\Cron\CommaParser;
 use App\Parser\Cron\RangeParser;
 use App\Parser\Cron\IncrementParser;
+use App\Parser\Cron\RangeIncrementParser;
 
 class ExpressionParser
 {
@@ -34,15 +35,29 @@ class ExpressionParser
         return self::parsePattern($pattern, 1, 7);
     }
 
+    public static function parseYear(string $pattern): string
+    {
+        return self::parsePattern($pattern, 2022, 2035);
+    }
+
     private static function parsePattern(string $pattern, int $lower, int $upper)
     {
         $starParser = new StarParser($pattern, $lower, $upper);
+        $rangeIncrementParser = new RangeIncrementParser($pattern, $lower, $upper);
         $rangeParser = new RangeParser($pattern, $lower, $upper);
-        $incrementParser = new IncrementParser($pattern, $lower, $upper);
         $commaParser = new CommaParser($pattern, $lower, $upper);
+        $incrementParser = new IncrementParser($pattern, $lower, $upper);
 
         if ($starParser->isMatch()) {
             return $starParser->summary();
+        }
+
+        if ($rangeIncrementParser->isMatch()) {
+            return $rangeIncrementParser->summary();
+        }
+
+        if ($commaParser->isMatch()) {
+            return $commaParser->summary();
         }
 
         if ($rangeParser->isMatch()) {
@@ -51,10 +66,6 @@ class ExpressionParser
 
         if ($incrementParser->isMatch()) {
             return $incrementParser->summary();
-        }
-
-        if ($commaParser->isMatch()) {
-            return $commaParser->summary();
         }
 
         return 'Invalid expression';

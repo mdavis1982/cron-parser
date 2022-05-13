@@ -46,6 +46,11 @@ class ParseCronCommand extends Command
         $this->outputMetric('day of month', $expression->dayOfMonth());
         $this->outputMetric('month', $expression->month());
         $this->outputMetric('day of week', $expression->dayOfWeek());
+
+        if ($expression->hasYear()) {
+            $this->outputMetric('year', $expression->year());
+        }
+
         $this->outputMetric('command', $expression->command());
     }
 
